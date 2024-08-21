@@ -20,7 +20,6 @@ services:
   frontend:
     image: agafivan/kittygram_frontend
     env_file: .env
-    build: ./frontend/
     volumes:
       - static:/static
     command: cp -r /app/build/. /static/
