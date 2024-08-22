@@ -17,17 +17,19 @@ services:
     volumes:
       - static:/backend_static
       - media:/media
+    depends_on:
+      - db
   frontend:
     image: agafivan/kittygram_frontend
-    env_file: .env
     volumes:
       - static:/static
     command: cp -r /app/build/. /static/
   gateway:
     image: agafivan/kittygram_gateway
-    env_file: .env
     ports:
       - 9000:80
     volumes:
       - static:/static
       - media:/media
+    depends_on:
+      - backend
