@@ -1,26 +1,81 @@
-#  Как работать с репозиторием финального задания
+# КИТТИГРАМ
 
-## Что нужно сделать
+Проектом «Киттиграм» — сайт, на котором пользователи могут публиковать информацию о своих питомцах-котиках.
+## Для запуска api проекта необходимо:
+- Клонировать репозиторий и перейти в него в командной строке:
+```
+git clone https://github.com/corbuncul/kittygram.git
+cd kittygram/backend
+```
+- Cоздать и активировать виртуальное окружение:
+```
+python3 -m venv env
+```
+* Если у вас Linux/macOS
 
-Настроить запуск проекта Kittygram в контейнерах и CI/CD с помощью GitHub Actions
+    ```
+    source env/bin/activate
+    ```
 
-## Как проверить работу с помощью автотестов
+* Если у вас windows
 
-В корне репозитория создайте файл tests.yml со следующим содержимым:
-```yaml
-repo_owner: ваш_логин_на_гитхабе
-kittygram_domain: полная ссылка (https://доменное_имя) на ваш проект Kittygram
-taski_domain: полная ссылка (https://доменное_имя) на ваш проект Taski
-dockerhub_username: ваш_логин_на_докерхабе
+    ```
+    source env/scripts/activate
+    ```
+- Установить зависимости из файла requirements.txt:
+```
+python3 -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+- Выполнить миграции:
+```
+python3 manage.py migrate
+```
+- Запустить проект:
+```
+python3 manage.py runserver
+```
+## Для запуска фронтенда проекта необходимо:
+- перейти в папку фронтенда
+```
+cd kittygramm/frontend
+```
+- Установить зависимости:
+
+```
+npm i
 ```
 
-Скопируйте содержимое файла `.github/workflows/main.yml` в файл `kittygram_workflow.yml` в корневой директории проекта.
+- Запустить проект:
 
-Для локального запуска тестов создайте виртуальное окружение, установите в него зависимости из backend/requirements.txt и запустите в корневой директории проекта `pytest`.
-
-## Чек-лист для проверки перед отправкой задания
-
-- Проект Taski доступен по доменному имени, указанному в `tests.yml`.
-- Проект Kittygram доступен по доменному имени, указанному в `tests.yml`.
-- Пуш в ветку main запускает тестирование и деплой Kittygram, а после успешного деплоя вам приходит сообщение в телеграм.
-- В корне проекта есть файл `kittygram_workflow.yml`.
+```
+npm run start
+```
+## Для запуска проекта вместе фронтендом необходимо:
+- создать файл .env и внести в него следующие настройки:
+```
+POSTGRES_DB=<имя базы данных>
+POSTGRES_USER=<пользователь базы данных>
+POSTGRES_PASSWORD=<пароль пользователя базы данных>
+DB_NAME=<имя базы данных>
+DB_HOST=<имя контейнера с базой данных>
+DB_PORT=<порт, на котором работает база данных>
+SECRET_KEY=<секретный ключ джанго-проекта>
+SERVER_IP=<IP-адрес сайта>
+SERVER_DOMAIN=<Доменное имя сайта>
+```
+- запустить проект командой:
+```
+docker compose up -d
+```
+- произвести миграции и скопировать статику:
+```
+docker compose exec backend python manage.py migrate
+docker compose exec backend python manage.py collectstatic
+docker compose exec backend cp -r /app/collected_static/. /backend_static/static/
+```
+- создать суперпользователя:
+```
+docker compose exec backend python manage.py createsuperuser
+```
+- Можно пользоваться. Проект будет доступен по адресу http://localhost:9000/
